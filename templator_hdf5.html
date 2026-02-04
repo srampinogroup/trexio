@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-12-08 Mon 19:32 -->
+<!-- 2026-02-04 Wed 19:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HDF5 back end</title>
@@ -226,25 +226,25 @@ org_html_manager.setup();  // activate after the parameters are set
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org42454c3">1. Template for HDF5 definitions</a></li>
-<li><a href="#org8acd6b0">2. Template for HDF5 structures</a></li>
-<li><a href="#org50523dd">3. Template for HDF5 init/deinit</a></li>
-<li><a href="#org09fb376">4. Template for HDF5 has a group</a></li>
-<li><a href="#org6f59b39">5. Template for HDF5 has/read/write a numerical attribute</a></li>
-<li><a href="#org02d411c">6. Template for HDF5 has/read/write a dataset of numerical data</a></li>
-<li><a href="#org3ec7692">7. Template for HDF5 has/read/write a dataset of sparse data</a></li>
-<li><a href="#org23e598a">8. Template for HDF5 has/read/write a dataset of buffered vectors</a></li>
-<li><a href="#org09763f0">9. Template for HDF5 has/read/write a dataset of strings</a></li>
-<li><a href="#orgf0b5434">10. Template for HDF5 has/read/write a string attribute</a></li>
-<li><a href="#org34176b5">11. Template for HDF5 delete a group (UNSAFE mode)</a></li>
-<li><a href="#orged38531">12. Source code for the determinant part</a></li>
-<li><a href="#org160abf5">13. Helper functions</a></li>
+<li><a href="#org3a11a65">1. Template for HDF5 definitions</a></li>
+<li><a href="#orged1d8c2">2. Template for HDF5 structures</a></li>
+<li><a href="#orgbb3ad11">3. Template for HDF5 init/deinit</a></li>
+<li><a href="#orga8bc7af">4. Template for HDF5 has a group</a></li>
+<li><a href="#orgea3d71e">5. Template for HDF5 has/read/write a numerical attribute</a></li>
+<li><a href="#orga37bf4c">6. Template for HDF5 has/read/write a dataset of numerical data</a></li>
+<li><a href="#org32e0975">7. Template for HDF5 has/read/write a dataset of sparse data</a></li>
+<li><a href="#orgcc833ef">8. Template for HDF5 has/read/write a dataset of buffered vectors</a></li>
+<li><a href="#org4971db6">9. Template for HDF5 has/read/write a dataset of strings</a></li>
+<li><a href="#org42dbc72">10. Template for HDF5 has/read/write a string attribute</a></li>
+<li><a href="#orga1e2cb7">11. Template for HDF5 delete a group (UNSAFE mode)</a></li>
+<li><a href="#org46dd55e">12. Source code for the determinant part</a></li>
+<li><a href="#org16a50e0">13. Helper functions</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org42454c3" class="outline-2">
-<h2 id="org42454c3"><span class="section-number-2">1.</span> Template for HDF5 definitions</h2>
+<div id="outline-container-org3a11a65" class="outline-2">
+<h2 id="org3a11a65"><span class="section-number-2">1.</span> Template for HDF5 definitions</h2>
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #483d8b;">#define</span> $GROUP$_GROUP_NAME          <span style="color: #8b2252;">"$group$"</span>
@@ -256,8 +256,8 @@ org_html_manager.setup();  // activate after the parameters are set
 </div>
 </div>
 
-<div id="outline-container-org8acd6b0" class="outline-2">
-<h2 id="org8acd6b0"><span class="section-number-2">2.</span> Template for HDF5 structures</h2>
+<div id="outline-container-orged1d8c2" class="outline-2">
+<h2 id="orged1d8c2"><span class="section-number-2">2.</span> Template for HDF5 structures</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Polymorphism of the <code>trexio_t</code> type is handled by ensuring that the
@@ -277,8 +277,8 @@ corresponding types for all back ends can be safely casted to
 </div>
 </div>
 
-<div id="outline-container-org50523dd" class="outline-2">
-<h2 id="org50523dd"><span class="section-number-2">3.</span> Template for HDF5 init/deinit</h2>
+<div id="outline-container-orgbb3ad11" class="outline-2">
+<h2 id="orgbb3ad11"><span class="section-number-2">3.</span> Template for HDF5 init/deinit</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #228b22;">trexio_exit_code</span>
@@ -410,10 +410,6 @@ corresponding types for all back ends can be safely casted to
   H5Fclose(f-&gt;file_id);
   f-&gt;file_id = 0;
 
-  // <span style="color: #b22222;">Clean up all allocated memory
-</span>  H5close();
-  H5garbage_collect();
-
   <span style="color: #a020f0;">return</span> TREXIO_SUCCESS;
 
 }
@@ -422,8 +418,8 @@ corresponding types for all back ends can be safely casted to
 </div>
 </div>
 
-<div id="outline-container-org09fb376" class="outline-2">
-<h2 id="org09fb376"><span class="section-number-2">4.</span> Template for HDF5 has a group</h2>
+<div id="outline-container-orga8bc7af" class="outline-2">
+<h2 id="orga8bc7af"><span class="section-number-2">4.</span> Template for HDF5 has a group</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #228b22;">trexio_exit_code</span>
@@ -453,8 +449,8 @@ corresponding types for all back ends can be safely casted to
 </div>
 </div>
 
-<div id="outline-container-org6f59b39" class="outline-2">
-<h2 id="org6f59b39"><span class="section-number-2">5.</span> Template for HDF5 has/read/write a numerical attribute</h2>
+<div id="outline-container-orgea3d71e" class="outline-2">
+<h2 id="orgea3d71e"><span class="section-number-2">5.</span> Template for HDF5 has/read/write a numerical attribute</h2>
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #228b22;">trexio_exit_code</span>
@@ -491,8 +487,8 @@ corresponding types for all back ends can be safely casted to
 {
 
   <span style="color: #a020f0;">if</span> (file == <span style="color: #008b8b;">NULL</span>) <span style="color: #a020f0;">return</span> TREXIO_INVALID_ARG_1;
-  <span style="color: #a020f0;">if</span> (num &lt; 0) <span style="color: #a020f0;">return</span> TREXIO_INVALID_ARG_2;
-
+  //<span style="color: #b22222;">if (num &lt;= 0L) return TREXIO_INVALID_NUM; /* this line is uncommented by the generator for dimensioning variables; do NOT remove! */
+</span>
   <span style="color: #228b22;">trexio_hdf5_t</span>* <span style="color: #a020f0;">const</span> <span style="color: #a0522d;">f</span> = (<span style="color: #228b22;">trexio_hdf5_t</span>*) file;
 
   /* <span style="color: #b22222;">Delete the attribute if it exists and if the file is open in UNSAFE mode</span> */
@@ -559,8 +555,8 @@ corresponding types for all back ends can be safely casted to
 </div>
 </div>
 
-<div id="outline-container-org02d411c" class="outline-2">
-<h2 id="org02d411c"><span class="section-number-2">6.</span> Template for HDF5 has/read/write a dataset of numerical data</h2>
+<div id="outline-container-orga37bf4c" class="outline-2">
+<h2 id="orga37bf4c"><span class="section-number-2">6.</span> Template for HDF5 has/read/write a dataset of numerical data</h2>
 <div class="outline-text-2" id="text-6">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #228b22;">trexio_exit_code</span>
@@ -701,8 +697,8 @@ corresponding types for all back ends can be safely casted to
 </div>
 </div>
 
-<div id="outline-container-org3ec7692" class="outline-2">
-<h2 id="org3ec7692"><span class="section-number-2">7.</span> Template for HDF5 has/read/write a dataset of sparse data</h2>
+<div id="outline-container-org32e0975" class="outline-2">
+<h2 id="org32e0975"><span class="section-number-2">7.</span> Template for HDF5 has/read/write a dataset of sparse data</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Sparse data is stored using extensible datasets of HDF5. Extensibility is required
@@ -917,8 +913,8 @@ due to the fact that the sparse data will be written in chunks of user-defined s
 </div>
 </div>
 
-<div id="outline-container-org23e598a" class="outline-2">
-<h2 id="org23e598a"><span class="section-number-2">8.</span> Template for HDF5 has/read/write a dataset of buffered vectors</h2>
+<div id="outline-container-orgcc833ef" class="outline-2">
+<h2 id="orgcc833ef"><span class="section-number-2">8.</span> Template for HDF5 has/read/write a dataset of buffered vectors</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Chunked I/O in HDF5 for <code>buffered</code> data.
@@ -1058,8 +1054,8 @@ Chunked I/O in HDF5 for <code>buffered</code> data.
 </div>
 </div>
 
-<div id="outline-container-org09763f0" class="outline-2">
-<h2 id="org09763f0"><span class="section-number-2">9.</span> Template for HDF5 has/read/write a dataset of strings</h2>
+<div id="outline-container-org4971db6" class="outline-2">
+<h2 id="org4971db6"><span class="section-number-2">9.</span> Template for HDF5 has/read/write a dataset of strings</h2>
 <div class="outline-text-2" id="text-9">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #228b22;">trexio_exit_code</span>
@@ -1261,8 +1257,8 @@ Chunked I/O in HDF5 for <code>buffered</code> data.
 </div>
 </div>
 
-<div id="outline-container-orgf0b5434" class="outline-2">
-<h2 id="orgf0b5434"><span class="section-number-2">10.</span> Template for HDF5 has/read/write a string attribute</h2>
+<div id="outline-container-org42dbc72" class="outline-2">
+<h2 id="org42dbc72"><span class="section-number-2">10.</span> Template for HDF5 has/read/write a string attribute</h2>
 <div class="outline-text-2" id="text-10">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #228b22;">trexio_exit_code</span>
@@ -1390,8 +1386,8 @@ Chunked I/O in HDF5 for <code>buffered</code> data.
 </div>
 </div>
 </div>
-<div id="outline-container-org34176b5" class="outline-2">
-<h2 id="org34176b5"><span class="section-number-2">11.</span> Template for HDF5 delete a group (UNSAFE mode)</h2>
+<div id="outline-container-orga1e2cb7" class="outline-2">
+<h2 id="orga1e2cb7"><span class="section-number-2">11.</span> Template for HDF5 delete a group (UNSAFE mode)</h2>
 <div class="outline-text-2" id="text-11">
 <p>
 <b><b>Note:</b></b> in early versions of the HDF5 library (v &lt; 1.10) unlinking an object was not working as expected
@@ -1431,8 +1427,8 @@ Thus, any corrupted/lost file space will remain in the first file. The use of <c
 </div>
 </div>
 
-<div id="outline-container-orged38531" class="outline-2">
-<h2 id="orged38531"><span class="section-number-2">12.</span> Source code for the determinant part</h2>
+<div id="outline-container-org46dd55e" class="outline-2">
+<h2 id="org46dd55e"><span class="section-number-2">12.</span> Source code for the determinant part</h2>
 <div class="outline-text-2" id="text-12">
 <p>
 Each array is stored in a separate HDF5 dataset due to the fact that determinant I/O has to be decoupled.
@@ -1540,8 +1536,8 @@ Size specifies the number of data items (e.g. determinants) to process.
 </div>
 </div>
 
-<div id="outline-container-org160abf5" class="outline-2">
-<h2 id="org160abf5"><span class="section-number-2">13.</span> Helper functions</h2>
+<div id="outline-container-org16a50e0" class="outline-2">
+<h2 id="org16a50e0"><span class="section-number-2">13.</span> Helper functions</h2>
 <div class="outline-text-2" id="text-13">
 <div class="org-src-container">
 <pre class="src src-c"><span style="color: #228b22;">trexio_exit_code</span>
@@ -1812,7 +1808,7 @@ Size specifies the number of data items (e.g. determinants) to process.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: TREX-CoE</p>
-<p class="date">Created: 2025-12-08 Mon 19:32</p>
+<p class="date">Created: 2026-02-04 Wed 19:58</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
