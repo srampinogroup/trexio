@@ -1230,25 +1230,28 @@ power = [
   The $a_i$ are the density fitting coefficients. The auxiliary basis
   is defined within the ~auxbasis~ group.
 
-   #+NAME: dft
+   #+NAME: dfc
   | Variable      | Type    | Row-major Dimensions | Column-major Dimensions | Description                                   |
   |---------------+---------+----------------------+-------------------------+-----------------------------------------------|
   | ~type~        | ~str~   |                      |                         | Free text to identify the set of coefficients |
   | ~num~         | ~dim~   |                      |                         | Number of coefficients                        |
-  | ~coefficient~ | ~float~ | ~[dft.num]~          | ~(dft.num)~             | Density fitting coefficients                  |
+  | ~coefficient~ | ~float~ | ~[dfc.num]~          | ~(dfc.num)~             | Density fitting coefficients                  |
 
 
-   #+CALL: json(data=dft, title="dft")
+   #+CALL: json(data=dfc, title="dfc")
 
    #+RESULTS:
    :results:
    #+begin_src python :tangle trex.json
-       "dft": {
+       "dfc": {
 		  "type" : [ "str"  , []            ]
 	 ,         "num" : [ "dim"  , []            ]
-	 , "coefficient" : [ "float", [ "dft.num" ] ]
+	 , "coefficient" : [ "float", [ "dfc.num" ] ]
        } ,
    #+end_src
+
+   #+RESULTS:
+
    :end:
 
    :end:
