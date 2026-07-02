@@ -1218,7 +1218,7 @@ power = [
 
     :end:
 
-** Density fitting coefficients (dfc group)
+OP** Density fitting coefficients (dfc group)
 
   The molecular electron density can be approximated by an expansion
   on an auxiliary basis such that:
@@ -1231,11 +1231,11 @@ power = [
   is defined within the ~auxbasis~ group.
 
    #+NAME: dft
-  | Variable      | Type    | Row-major Dimensions | Column-major Dimensions | Description                                   |
-  |---------------+---------+----------------------+-------------------------+-----------------------------------------------|
-  | ~type~        | ~str~   |                      |                         | Free text to identify the set of coefficients |
-  | ~num~         | ~dim~   |                      |                         | Number of coefficients                        |
-  | ~coefficient~ | ~float~ | ~[dft.num]~          | ~(dft.num)~             | Density fitting coefficients                  |
+  | Variable      | Type    | Row-major Dimensions | Column-major Dimensions | Description                                                              |
+  |---------------+---------+----------------------+-------------------------+--------------------------------------------------------------------------|
+  | ~type~        | ~str~   |                      |                         | Free text to identify the set of coefficients (DFC, RIDFC, VDFC, RIVDFC) |
+  | ~num~         | ~dim~   |                      |                         | Number of coefficients                                                   |
+  | ~coefficient~ | ~float~ | ~[dft.num]~          | ~(dft.num)~             | Density fitting coefficients                                             |
 
 
    #+CALL: json(data=dft, title="dft")
@@ -1244,9 +1244,9 @@ power = [
    :results:
    #+begin_src python :tangle trex.json
        "dft": {
-		  "type" : [ "str"  , []            ]
-	 ,         "num" : [ "dim"  , []            ]
-	 , "coefficient" : [ "float", [ "dft.num" ] ]
+             "type" : [ "str"  , []            ]
+    ,         "num" : [ "dim"  , []            ]
+    , "coefficient" : [ "float", [ "dft.num" ] ]
        } ,
    #+end_src
    :end:
