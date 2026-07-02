@@ -1224,7 +1224,7 @@ power = [
   on an auxiliary basis such that:
 
   \[
-  \rho(\vec{r}) \simeq \sum_{i=1}^{N_{\mathrm{abs}}} a_i f_i(\vec{r}).
+  \rho(\mathbf{r}) \simeq \sum_{i=1}^{N_{\mathrm{abs}}} a_i f_i(\mathbf{r}).
   \]
 
   The $a_i$ are the density fitting coefficients. The auxiliary basis
