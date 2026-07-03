@@ -8,15 +8,14 @@
 - [ ] I ran the local checks that mirror the relevant CI jobs for this PR, or explained any gaps below
 - [ ] I ran `./autogen.sh`
 - [ ] I ran `./configure --enable-silent-rules --enable-debug`
-- [ ] I ran `make -j2`
-- [ ] I ran `make -j2 check`
-- [ ] I ran `make -j2 check` a second time
-- [ ] I ran `./configure --enable-silent-rules --enable-debug --enable-sanitizer`
+- [ ] I ran `make -j4`
+- [ ] I ran `make -j4 check`
+- [ ] I ran `make -j4 check` a second time
+- [ ] I ran `make clean && ./configure --enable-silent-rules --enable-debug --enable-sanitizer`
 - [ ] I rebuilt and reran the test suite after enabling sanitizers
 - [ ] I ran `cmake -S. -Bbuilddir`
-- [ ] I ran `cmake --build builddir -j2`
-- [ ] I ran `ctest --test-dir builddir -j2`
-- [ ] I ran `pre-commit run --all-files`
+- [ ] I ran `cmake --build builddir -j4`
+- [ ] I ran `ctest --test-dir builddir -j4`
 - [ ] If this PR touches C or headers, I ran `tools/check-coding-conventions.sh`
 - [ ] If this PR affects the Python API, I ran `make python-install` and `make python-test`
 - [ ] I noted any CI-equivalent validation step that was not relevant or could not run because of a missing local dependency
