@@ -587,7 +587,6 @@ prim_factor =
   4.3649547399719840e-01, 1.8135965626177861e+00 ]
     #+END_EXAMPLE
 
-
 ** Auxiliary basis (auxbasis group)
 
 This is a duplicate of the basis group that can be used to store
@@ -598,45 +597,42 @@ documentation.
 
     # Use data=basis and title=auxbasis below to ensure that the data
     # is the same in the two tables
-    #+CALL: json(data=basis, title="auxbasis")
+    #+CALL: json(data=basis, title="auxbasis", replace_group="basis")
 
     #+RESULTS:
     :results:
     #+begin_src python :tangle trex.json
-	"auxbasis": {
-			 "type" : [ "str"  , []                                                 ]
-	  ,          "prim_num" : [ "dim"  , []                                                 ]
-	  ,         "shell_num" : [ "dim"  , []                                                 ]
-	  ,      "nao_grid_num" : [ "dim"  , []                                                 ]
-	  ,  "interp_coeff_cnt" : [ "dim"  , []                                                 ]
-	  ,     "nucleus_index" : [ "index", [ "basis.shell_num" ]                              ]
-	  ,     "shell_ang_mom" : [ "int"  , [ "basis.shell_num" ]                              ]
-	  ,      "shell_factor" : [ "float", [ "basis.shell_num" ]                              ]
-	  ,           "r_power" : [ "int"  , [ "basis.shell_num" ]                              ]
-	  ,    "nao_grid_start" : [ "index", [ "basis.shell_num" ]                              ]
-	  ,     "nao_grid_size" : [ "dim"  , [ "basis.shell_num" ]                              ]
-	  ,       "shell_index" : [ "index", [ "basis.prim_num" ]                               ]
-	  ,          "exponent" : [ "float", [ "basis.prim_num" ]                               ]
-	  ,       "exponent_im" : [ "float", [ "basis.prim_num" ]                               ]
-	  ,       "coefficient" : [ "float", [ "basis.prim_num" ]                               ]
-	  ,    "coefficient_im" : [ "float", [ "basis.prim_num" ]                               ]
-	  ,   "oscillation_arg" : [ "float", [ "basis.prim_num" ]                               ]
-	  ,  "oscillation_kind" : [ "str"  , []                                                 ]
-	  ,       "prim_factor" : [ "float", [ "basis.prim_num" ]                               ]
-	  ,             "e_cut" : [ "float", []                                                 ]
-	  ,   "nao_grid_radius" : [ "float", [ "basis.nao_grid_num" ]                           ]
-	  ,      "nao_grid_phi" : [ "float", [ "basis.nao_grid_num" ]                           ]
-	  ,     "nao_grid_grad" : [ "float", [ "basis.nao_grid_num" ]                           ]
-	  ,      "nao_grid_lap" : [ "float", [ "basis.nao_grid_num" ]                           ]
-	  , "interpolator_kind" : [ "str"  , []                                                 ]
-	  ,  "interpolator_phi" : [ "float", [ "basis.nao_grid_num", "basis.interp_coeff_cnt" ] ]
-	  , "interpolator_grad" : [ "float", [ "basis.nao_grid_num", "basis.interp_coeff_cnt" ] ]
-	  ,  "interpolator_lap" : [ "float", [ "basis.nao_grid_num", "basis.interp_coeff_cnt" ] ]
-	} ,
+        "auxbasis": {
+                         "type" : [ "str"  , []                                                 ]
+          ,          "prim_num" : [ "dim"  , []                                                 ]
+          ,         "shell_num" : [ "dim"  , []                                                 ]
+          ,      "nao_grid_num" : [ "dim"  , []                                                 ]
+          ,  "interp_coeff_cnt" : [ "dim"  , []                                                 ]
+          ,     "nucleus_index" : [ "index", [ "auxbasis.shell_num" ]                           ]
+          ,     "shell_ang_mom" : [ "int"  , [ "auxbasis.shell_num" ]                           ]
+          ,      "shell_factor" : [ "float", [ "auxbasis.shell_num" ]                           ]
+          ,           "r_power" : [ "int"  , [ "auxbasis.shell_num" ]                           ]
+          ,    "nao_grid_start" : [ "index", [ "auxbasis.shell_num" ]                           ]
+          ,     "nao_grid_size" : [ "dim"  , [ "auxbasis.shell_num" ]                           ]
+          ,       "shell_index" : [ "index", [ "auxbasis.prim_num" ]                            ]
+          ,          "exponent" : [ "float", [ "auxbasis.prim_num" ]                            ]
+          ,       "exponent_im" : [ "float", [ "auxbasis.prim_num" ]                            ]
+          ,       "coefficient" : [ "float", [ "auxbasis.prim_num" ]                            ]
+          ,    "coefficient_im" : [ "float", [ "auxbasis.prim_num" ]                            ]
+          ,   "oscillation_arg" : [ "float", [ "auxbasis.prim_num" ]                            ]
+          ,  "oscillation_kind" : [ "str"  , []                                                 ]
+          ,       "prim_factor" : [ "float", [ "auxbasis.prim_num" ]                            ]
+          ,             "e_cut" : [ "float", []                                                 ]
+          ,   "nao_grid_radius" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
+          ,      "nao_grid_phi" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
+          ,     "nao_grid_grad" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
+          ,      "nao_grid_lap" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
+          , "interpolator_kind" : [ "str"  , []                                                 ]
+          ,  "interpolator_phi" : [ "float", [ "auxbasis.nao_grid_num", "auxbasis.interp_coeff_cnt" ] ]
+          , "interpolator_grad" : [ "float", [ "auxbasis.nao_grid_num", "auxbasis.interp_coeff_cnt" ] ]
+          ,  "interpolator_lap" : [ "float", [ "auxbasis.nao_grid_num", "auxbasis.interp_coeff_cnt" ] ]
+        } ,
     #+end_src
-
-    #+RESULTS:
-
     :end:
 
 ** Effective core potentials (ecp group)
@@ -892,33 +888,33 @@ power = [
    the $p$ ordering above).  Explicitly, in Cartesian form (with
    $r^2 = x^2 + y^2 + z^2$):
 
-   | $\ell$ | $m$  | $S^m_\ell(\mathbf{r})$                          |
-   |--------+------+------------------------------------------------|
-   | 0      | $0$  | $1$                                            |
-   | 1      | $0$  | $z$                                            |
-   | 1      | $+1$ | $x$                                            |
-   | 1      | $-1$ | $y$                                            |
-   | 2      | $0$  | $\frac{1}{2}(3z^2 - r^2)$                       |
-   | 2      | $+1$ | $\sqrt{3}\,xz$                                  |
-   | 2      | $-1$ | $\sqrt{3}\,yz$                                  |
-   | 2      | $+2$ | $\frac{\sqrt{3}}{2}(x^2 - y^2)$                 |
-   | 2      | $-2$ | $\sqrt{3}\,xy$                                  |
-   | 3      | $0$  | $\frac{1}{2}z(5z^2 - 3r^2)$                     |
-   | 3      | $+1$ | $\frac{\sqrt{6}}{4}x(5z^2 - r^2)$              |
-   | 3      | $-1$ | $\frac{\sqrt{6}}{4}y(5z^2 - r^2)$              |
-   | 3      | $+2$ | $\frac{\sqrt{15}}{2}z(x^2 - y^2)$              |
-   | 3      | $-2$ | $\sqrt{15}\,xyz$                                |
-   | 3      | $+3$ | $\frac{\sqrt{10}}{4}x(x^2 - 3y^2)$            |
-   | 3      | $-3$ | $\frac{\sqrt{10}}{4}y(3x^2 - y^2)$            |
-   | 4      | $0$  | $\frac{1}{8}(35z^4 - 30z^2 r^2 + 3r^4)$        |
-   | 4      | $+1$ | $\frac{\sqrt{10}}{4}xz(7z^2 - 3r^2)$          |
-   | 4      | $-1$ | $\frac{\sqrt{10}}{4}yz(7z^2 - 3r^2)$          |
-   | 4      | $+2$ | $\frac{\sqrt{5}}{4}(x^2 - y^2)(7z^2 - r^2)$    |
-   | 4      | $-2$ | $\frac{\sqrt{5}}{2}xy(7z^2 - r^2)$            |
-   | 4      | $+3$ | $\frac{\sqrt{70}}{4}xz(x^2 - 3y^2)$          |
-   | 4      | $-3$ | $\frac{\sqrt{70}}{4}yz(3x^2 - y^2)$          |
-   | 4      | $+4$ | $\frac{\sqrt{35}}{8}(x^4 - 6x^2 y^2 + y^4)$    |
-   | 4      | $-4$ | $\frac{\sqrt{35}}{2}xy(x^2 - y^2)$            |
+   | $\ell$ | $m$  | $S^m_\ell(\mathbf{r})$                      |
+   |--------+------+---------------------------------------------|
+   |      0 | $0$  | $1$                                         |
+   |      1 | $0$  | $z$                                         |
+   |      1 | $+1$ | $x$                                         |
+   |      1 | $-1$ | $y$                                         |
+   |      2 | $0$  | $\frac{1}{2}(3z^2 - r^2)$                   |
+   |      2 | $+1$ | $\sqrt{3}\,xz$                              |
+   |      2 | $-1$ | $\sqrt{3}\,yz$                              |
+   |      2 | $+2$ | $\frac{\sqrt{3}}{2}(x^2 - y^2)$             |
+   |      2 | $-2$ | $\sqrt{3}\,xy$                              |
+   |      3 | $0$  | $\frac{1}{2}z(5z^2 - 3r^2)$                 |
+   |      3 | $+1$ | $\frac{\sqrt{6}}{4}x(5z^2 - r^2)$           |
+   |      3 | $-1$ | $\frac{\sqrt{6}}{4}y(5z^2 - r^2)$           |
+   |      3 | $+2$ | $\frac{\sqrt{15}}{2}z(x^2 - y^2)$           |
+   |      3 | $-2$ | $\sqrt{15}\,xyz$                            |
+   |      3 | $+3$ | $\frac{\sqrt{10}}{4}x(x^2 - 3y^2)$          |
+   |      3 | $-3$ | $\frac{\sqrt{10}}{4}y(3x^2 - y^2)$          |
+   |      4 | $0$  | $\frac{1}{8}(35z^4 - 30z^2 r^2 + 3r^4)$     |
+   |      4 | $+1$ | $\frac{\sqrt{10}}{4}xz(7z^2 - 3r^2)$        |
+   |      4 | $-1$ | $\frac{\sqrt{10}}{4}yz(7z^2 - 3r^2)$        |
+   |      4 | $+2$ | $\frac{\sqrt{5}}{4}(x^2 - y^2)(7z^2 - r^2)$ |
+   |      4 | $-2$ | $\frac{\sqrt{5}}{2}xy(7z^2 - r^2)$          |
+   |      4 | $+3$ | $\frac{\sqrt{70}}{4}xz(x^2 - 3y^2)$         |
+   |      4 | $-3$ | $\frac{\sqrt{70}}{4}yz(3x^2 - y^2)$         |
+   |      4 | $+4$ | $\frac{\sqrt{35}}{8}(x^4 - 6x^2 y^2 + y^4)$ |
+   |      4 | $-4$ | $\frac{\sqrt{35}}{2}xy(x^2 - y^2)$          |
 
    The numerical prefactors correspond to the normalization implied by
    the defining equation $S^m_\ell = \sqrt{\frac{4\pi}{2\ell+1}}\,
@@ -1737,7 +1733,7 @@ power = [
 ** Python script from table to json
 
  #+NAME: json
- #+begin_src python :var data=nucleus title="End" last=0 :results output drawer
+ #+begin_src python :var data=nucleus title="End" last=0 replace_group=[] :results output drawer
 print("""#+begin_src python :tangle trex.json""")
 if title != "End":
     print("""    "%s": {"""%(title))
@@ -1764,6 +1760,8 @@ if title != "End":
         name = '"'+line[0]+'"'
         typ  = '"'+line[1]+'"'
         dims = line[2]
+        if replace_group:
+            dims = dims.replace(replace_group+".", title+".")
         if '[' in dims:
             dims = dims.strip()[1:-1]
             dims = [ '"'+x.strip()+'"' for x in dims.split(',') ]
@@ -1792,7 +1790,4 @@ print("""#+end_src""")
  #+begin_src python :tangle trex.json
  }
  #+end_src
-
- #+RESULTS:
-
  :end:
