@@ -1,0 +1,13 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: trexio
+Description: TREX Input/Output library
+URL: https://github.com/trex-coe/trexio
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -ltrexio
+Libs.private: @TREXIO_PC_LIBS_PRIVATE@
+Requires.private: @TREXIO_PC_REQUIRES_PRIVATE@
+Cflags: -I${includedir}

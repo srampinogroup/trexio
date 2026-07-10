@@ -145,6 +145,27 @@ install(FILES
   DESTINATION "${_trexio_install_cmakedir}"
   )
 
+set(TREXIO_PC_REQUIRES_PRIVATE "")
+if(ENABLE_HDF5)
+  set(TREXIO_PC_REQUIRES_PRIVATE "hdf5")
+endif()
+
+set(TREXIO_PC_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
+if(UNIX)
+  string(APPEND TREXIO_PC_LIBS_PRIVATE " -lm")
+endif()
+string(STRIP "${TREXIO_PC_LIBS_PRIVATE}" TREXIO_PC_LIBS_PRIVATE)
+
+configure_file(
+  "${PROJECT_SOURCE_DIR}/cmake/trexio.pc.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/trexio.pc"
+  @ONLY
+  )
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/trexio.pc"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+  )
+
 # Uninstall target, copied from CMake FAQ:
 # https://gitlab.kitware.com/cmake/community/wikis/FAQ#can-i-do-make-uninstall-with-cmake
 if(NOT TARGET uninstall)
