@@ -95,7 +95,9 @@ EXTRA_DIST += CMakeLists.txt \
               tests/test_macros.h  \
               cmake/FindTREXIO.cmake \
               cmake/cmake_uninstall.cmake.in \
-              cmake/standard_math_lib.cmake
+              cmake/standard_math_lib.cmake \
+              cmake/trexio-config.cmake.in \
+              cmake/trexio.pc.in
 
 
 # =============== TESTS =============== #
