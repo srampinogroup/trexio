@@ -12,6 +12,18 @@ project(Trexio
 	)
 
 option(TREXIO_FORTRAN "Build and test the TREXIO Fortran interface" ON)
+
+# By default, the shared TREXIO library is built (even without -DBUILD_SHARED_LIBS=ON).
+# To change this behaviour, append -DBUILD_STATIC_LIBS=ON to the cmake call.
+option(BUILD_SHARED_LIBS "Build the shared library" ON)
+option(BUILD_STATIC_LIBS "Build the static library" OFF)
+
+option(ENABLE_HDF5 "Enable HDF5 support" ON)
+
+# Optional configure for developer mode to generate source code from org-mode files.
+option(TREXIO_DEVEL "TREXIO developer mode (for code generation)." OFF)
+option(TREXIO_TESTS "Whether to perform tests for TREXIO" ON)
+
 if(TREXIO_FORTRAN)
   enable_language(Fortran)
 endif()
@@ -23,11 +35,8 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-# Optional configure for developer mode to generate source code from org-mode files.
-option(TREXIO_DEVEL "TREXIO developer mode (for code generation)." OFF)
-option(TREXIO_TESTS "Whether to perform tests for TREXIO" ON)
-
 if(EXISTS "${PROJECT_SOURCE_DIR}/.devel")
+  message(STATUS "Detected ${PROJECT_SOURCE_DIR}/.devel, enabling developer mode")
   set(TREXIO_DEVEL ON)
   find_package(Python3 REQUIRED)
   if(Python3_FOUND)

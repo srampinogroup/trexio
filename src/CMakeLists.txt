@@ -28,11 +28,6 @@ set(TREXIO_PRIVATE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/trexio_memory.h
 	)
 
-# By default, the shared TREXIO library is built (even without -DBUILD_SHARED_LIBS=ON).
-# To change this behaviour, append -DBUILD_STATIC_LIBS=ON to the cmake call.
-option(BUILD_SHARED_LIBS "Build the shared library" ON)
-option(BUILD_STATIC_LIBS "Build the static library" OFF)
-
 if(BUILD_SHARED_LIBS AND BUILD_STATIC_LIBS)
   set(BUILD_SHARED_LIBS OFF)
 endif()
@@ -69,11 +64,6 @@ include(standard_math_lib)
 target_link_std_math(trexio PRIVATE)
 
 # ============= CONFIGURE HDF5 ==============
-
-# By defaulti, TREXIO is configured with the HDF5 support.
-# To change this, append -DENABLE_HDF5=OFF to the cmake call.
-option(ENABLE_HDF5 "Enable HDF5 support" ON)
-
 if(ENABLE_HDF5)
   # Try to detect HDF5 installation using built-in FindHDF5.cmake macro, unless the target has been set up previously.
   if (NOT TARGET hdf5::hdf5)
