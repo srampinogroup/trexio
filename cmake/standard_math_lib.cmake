@@ -26,7 +26,7 @@ return (int) (log( (double) *argv[0]) + sin( (double) *argv[1]) + sqrt( (double)
 
   check_c_source_compiles("${TEST_SOURCE}" "${VAR_BASENAME}")
 
-  if ("${VAR_BASENAME}")
+  if(${VAR_BASENAME})
     # No explicit linking to math library required
     return()
   endif()
@@ -36,7 +36,7 @@ return (int) (log( (double) *argv[0]) + sin( (double) *argv[1]) + sqrt( (double)
   set(CMAKE_REQUIRED_LIBRARIES "${STD_MATH_LIB}")
   check_c_source_compiles("${TEST_SOURCE}" "${VAR_BASENAME}_WITH_STDMATH")
 
-  if (NOT "${${VAR_BASENAME}_WITH_STDMATH}")
+  if(NOT ${VAR_BASENAME}_WITH_STDMATH)
     message(FATAL_ERROR "Program doesn't compile even though linked against '${STD_MATH_LIB}'")
   endif()
   

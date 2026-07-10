@@ -139,7 +139,7 @@ sudo apt-get update && sudo apt-get install libtrexio-dev
 ### Installation from source
 #### Minimal requirements (for users):
 
-- Autotools             (autoconf >= 2.69, automake >= 1.11, libtool >= 2.2) or CMake (>= 3.16)
+- Autotools             (autoconf >= 2.69, automake >= 1.11, libtool >= 2.2) or CMake (>= 3.19)
 - C compiler            (gcc/icc/clang)
 - Fortran compiler      (gfortran/ifort)
 - HDF5 library          (>= 1.8) [optional, recommended for high performance]
@@ -211,6 +211,9 @@ The aforementioned instructions rely on [Autotools](https://www.gnu.org/software
 4. ```ctest -j $(nproc)```
 5. `sudo make install`
 
+By default, CMake builds a shared TREXIO library. Pass
+`-DBUILD_SHARED_LIBS=OFF` to build a static library instead.
+
 **Note**: on systems with no `sudo` access, one can add `-DCMAKE_INSTALL_PREFIX=build` as an argument to the `cmake` command so that `make install/uninstall` can be run without `sudo` privileges.
 
 **Note**: when linking against an MPI-enabled HDF5 library one usually has to specify the MPI wrapper for the C compiler by adding, e.g., `-DCMAKE_C_COMPILER=mpicc` to the `cmake` command.
@@ -252,7 +255,7 @@ For example, the tutorial covering TREXIO basics using benzene molecule as an ex
 
 ### Linking to your program
 
-The `make install` command takes care of installing the TREXIO shared library on the user machine.
+The `make install` command takes care of installing the TREXIO library on the user machine.
 After installation, append `-ltrexio` to the list of compiler  (`$LIBS`) options.
 
 In some cases (e.g. when using custom installation prefix during configuration), the TREXIO library might end up installed in a directory, which is absent in the default `$LD_LIBRARY_PATH`.
@@ -262,9 +265,17 @@ In order to link the program against TREXIO, the search path can be modified as 
 
 where the `<path_to_trexio>` has to be replaced by the prefix used during the installation.
 
-If your project relies on CMake build system, feel free to use the
-[FindTREXIO.cmake](https://github.com/TREX-CoE/trexio/blob/master/cmake/FindTREXIO.cmake)
-module to find and link TREXIO library automatically.
+For CMake projects, use the package configuration installed by TREXIO:
+
+```cmake
+find_package(trexio CONFIG REQUIRED)
+target_link_libraries(your_target PRIVATE trexio::trexio)
+```
+
+The package also exposes `TREXIO_WITH_HDF5`, `TREXIO_HDF5_IS_PARALLEL`, and
+`TREXIO_WITH_FORTRAN` so downstream projects can inspect the installed TREXIO
+configuration when necessary. The library type is available from the standard
+`TYPE` property of the `trexio::trexio` target.
 
 In Fortran applications, make sure that the `trexio_f.f90` module file is included in the source tree.
 You might have to manually copy it into your program source directory.

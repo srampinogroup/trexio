@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 
 # =========== SETUP THE PROJECT =============
 
@@ -12,17 +12,12 @@ project(Trexio
 	)
 
 option(TREXIO_FORTRAN "Build and test the TREXIO Fortran interface" ON)
-
-# By default, the shared TREXIO library is built (even without -DBUILD_SHARED_LIBS=ON).
-# To change this behaviour, append -DBUILD_STATIC_LIBS=ON to the cmake call.
-option(BUILD_SHARED_LIBS "Build the shared library" ON)
-option(BUILD_STATIC_LIBS "Build the static library" OFF)
-
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(ENABLE_HDF5 "Enable HDF5 support" ON)
+option(TREXIO_TESTS "Whether to perform tests for TREXIO" ON)
 
 # Optional configure for developer mode to generate source code from org-mode files.
 option(TREXIO_DEVEL "TREXIO developer mode (for code generation)." OFF)
-option(TREXIO_TESTS "Whether to perform tests for TREXIO" ON)
 
 if(TREXIO_FORTRAN)
   enable_language(Fortran)
@@ -34,6 +29,32 @@ endif()
 # TREXIO through add_subdirectory() or FetchContent.
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+# ============= CONFIGURE DEPENDENCIES ==============
+
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+
+set(TREXIO_HDF5_IS_PARALLEL OFF)
+if(ENABLE_HDF5)
+  find_package(HDF5 REQUIRED COMPONENTS C)
+
+  message(STATUS "HDF5 version     :: ${HDF5_VERSION}")
+  message(STATUS "HDF5 include dir :: ${HDF5_INCLUDE_DIRS}")
+
+  if(HDF5_IS_PARALLEL)
+    set(TREXIO_HDF5_IS_PARALLEL ON)
+    find_package(MPI REQUIRED COMPONENTS C)
+  endif()
+endif()
+
+if(TREXIO_FORTRAN)
+  include(FortranCInterface)
+  FortranCInterface_VERIFY()
+endif()
+
+set(TREXIO_MOD_FILE "${PROJECT_SOURCE_DIR}/include/trexio_f.f90")
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/.devel")
   message(STATUS "Detected ${PROJECT_SOURCE_DIR}/.devel, enabling developer mode")
@@ -72,9 +93,6 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/.devel")
                  ${PROJECT_SOURCE_DIR}/include/config.h
 		 @ONLY)
 endif()
-
-# Set directories to be included at build time.
-include_directories(include)
 
 # Add subdirectory with add_library(trexio) specifications.
 add_subdirectory(src)

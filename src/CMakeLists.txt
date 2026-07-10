@@ -1,18 +1,6 @@
-
-# ============= THREADS SUPPORT ==============
-
-# the two options below add preference for the pthread library over other system-wide threads implementations
-set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-set(THREADS_PREFER_PTHREAD_FLAG TRUE)
-# find thread library
-find_package(Threads REQUIRED)
-
-# ============= STDINT SUPPORT ===============
-
-include(CheckIncludeFile)
-check_include_file(stdint.h HAVE_STDINT_H)
-
 # ========= DEFINE TREXIO C LIBRARY =========
+
+include(GNUInstallDirs)
 
 # Set a list of TREXIO source and header files that are always compiled.
 set(TREXIO_SOURCES
@@ -28,30 +16,14 @@ set(TREXIO_PRIVATE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/trexio_memory.h
 	)
 
-if(BUILD_SHARED_LIBS AND BUILD_STATIC_LIBS)
-  set(BUILD_SHARED_LIBS OFF)
-endif()
-
-# Conditional SHARED/STATIC build for TREXIO library.
-if(BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
-
-  message(STATUS "TREXIO :: shared C library will be built")
-  add_library(trexio SHARED)
-
-elseif(NOT BUILD_SHARED_LIBS AND BUILD_STATIC_LIBS)
-
-  message(STATUS "TREXIO :: static C library will be built")
-  add_library(trexio STATIC)
-  # Static TREXIO has to be compiled with -fPIC flag. For Shared it is done by default.
-  set_property(TARGET trexio PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-else()
-  message(FATAL_ERROR "Building both static and shared TREXIO simultaneously is not supported.")
-endif()
+add_library(trexio)
+add_library(trexio::trexio ALIAS trexio)
 
 # Set TREXIO version and include files.
 set_target_properties(trexio PROPERTIES
 	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION_MAJOR}
+	POSITION_INDEPENDENT_CODE ON
 	PUBLIC_HEADER ${TREXIO_PUBLIC_HEADERS}
 	)
 
@@ -62,60 +34,31 @@ target_compile_features(trexio PUBLIC c_std_99)
 
 include(standard_math_lib)
 target_link_std_math(trexio PRIVATE)
+target_link_libraries(trexio PRIVATE Threads::Threads)
 
 # ============= CONFIGURE HDF5 ==============
 if(ENABLE_HDF5)
-  # Try to detect HDF5 installation using built-in FindHDF5.cmake macro, unless the target has been set up previously.
-  if (NOT TARGET hdf5::hdf5)
-      find_package(HDF5 REQUIRED COMPONENTS C)
-  endif ()
-
-  if(HDF5_FOUND)
-    message(STATUS "HDF5 version     :: ${HDF5_VERSION}")
-    message(STATUS "HDF5 include dir :: ${HDF5_INCLUDE_DIRS}")
-  elseif(NOT TARGET hdf5::hdf5)
-    # Download and install HDF5 library using FetchContent
-    # ...
-    # For now - raise a FATAL_ERROR
-    message(FATAL_ERROR "HDF5 is enabled but not found.")
-  endif()
-
-  # If HDF5 found:
-  # - append the trexio_hdf5.c source file with the HDF5 back end to the list TREXIO_SOURCES
   list(APPEND TREXIO_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/trexio_hdf5.c)
   list(APPEND TREXIO_PRIVATE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/trexio_hdf5.h)
-  # - define symbol HAVE_HDF5=1 (used to activate HDF5 back end in the preprocessor conditionals)
-  target_compile_definitions(trexio PUBLIC "HAVE_HDF5")
-  target_link_libraries(trexio PRIVATE hdf5::hdf5)
-  if (HDF5_IS_PARALLEL)
-      if (NOT TARGET MPI::MPI_C)
-          find_package(MPI REQUIRED COMPONENTS C)
-      endif ()
-      target_link_libraries(trexio PUBLIC MPI::MPI_C)
-  endif ()
+  target_compile_definitions(trexio PRIVATE HAVE_HDF5)
+  target_link_libraries(trexio PRIVATE HDF5::HDF5)
+  if(TREXIO_HDF5_IS_PARALLEL)
+    target_link_libraries(trexio PRIVATE MPI::MPI_C)
+  endif()
 endif()
 
 # Private headers have to be listed as sources, otherwise they are installed
 # with public headers upon make install (when using PRIVATE_HEADER property).
 target_sources(trexio PRIVATE ${TREXIO_SOURCES} ${TREXIO_PRIVATE_HEADERS})
 target_include_directories(trexio PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-        $<INSTALL_INTERFACE:include>
-)
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
 
 # ============= FORTRAN SUPPORT ==============
 
 if(TREXIO_FORTRAN)
-  include(FortranCInterface)
-  # Check that C and Fortran compilers can talk to each other.
-  FortranCInterface_VERIFY()
-
-  # Fortran module
-  set(TREXIO_MOD_FILE ${PROJECT_SOURCE_DIR}/include/trexio_f.f90)
-  # Export to parent scope so tests directory picks this up.
-  set(TREXIO_MOD_FILE ${TREXIO_MOD_FILE} PARENT_SCOPE)
-  # Add TREXIO Fortran module as a library.
-  add_library(trexio_f SHARED)
+  add_library(trexio_f)
   target_sources(trexio_f PUBLIC ${TREXIO_MOD_FILE})
   target_link_libraries(trexio_f PUBLIC trexio)
 endif()
@@ -160,19 +103,47 @@ if(TREXIO_DEVEL)
 
 endif()
 
-# ============= INSTALL TREXIO ==============
+# ============= INSTALL TREXIO =============
 
-include(GNUInstallDirs)
-# Use standard GNU directories for installation of TREXIO (e.g. /usr/local/lib|include).
-# The installation prefix can be modified using -DCMAKE_INSTALL_PREFIX=<custom/path> option of cmake.
 install(TARGETS trexio
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-	)
-# Also install trexio_f.f90 file with TREXIO Fortran module.
+  EXPORT trexio-targets
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  )
+
 if(TREXIO_FORTRAN)
   install(FILES ${TREXIO_MOD_FILE} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
+
+set(_trexio_install_cmakedir "${CMAKE_INSTALL_LIBDIR}/cmake/trexio")
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  "${PROJECT_SOURCE_DIR}/cmake/trexio-config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/trexio-config.cmake"
+  INSTALL_DESTINATION "${_trexio_install_cmakedir}"
+  )
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/trexio-config-version.cmake"
+  VERSION "${PROJECT_VERSION}"
+  COMPATIBILITY SameMajorVersion
+  )
+
+install(EXPORT trexio-targets
+  FILE trexio-targets.cmake
+  NAMESPACE trexio::
+  DESTINATION "${_trexio_install_cmakedir}"
+  )
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/trexio-config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/trexio-config-version.cmake"
+  DESTINATION "${_trexio_install_cmakedir}"
+  )
 
 # Uninstall target, copied from CMake FAQ:
 # https://gitlab.kitware.com/cmake/community/wikis/FAQ#can-i-do-make-uninstall-with-cmake
@@ -183,7 +154,5 @@ if(NOT TARGET uninstall)
     IMMEDIATE @ONLY)
 
   add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 endif()
-
-# ===========================================
