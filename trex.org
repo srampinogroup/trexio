@@ -1214,7 +1214,14 @@ power = [
 
     :end:
 
-** Density fitting coefficients (densityfit group)
+** Auxiliary atomic orbitals (~auxao~ group)
+
+  Duplicate of the atomic orbitals group see documentation above.
+  Used with the ~auxbasis~ group to define auxiliary basis functions.
+
+  #+CALL: json(data=ao, title="auxao", replace_group="ao")
+
+** Density fitting coefficients (~densityfit~ group)
 
   The molecular electron density can be approximated by an expansion
   on an auxiliary basis such that:
@@ -1224,7 +1231,7 @@ power = [
   \]
 
   The $a_i$ are the $N$ density fitting coefficients. The auxiliary basis
-  is defined within the ~auxbasis~ group.
+  is defined within the ~auxbasis~ and ~auxao~ groups.
 
    #+NAME: densityfit
   | Variable      | Type    | Row-major Dimensions | Column-major Dimensions | Description                                   |
@@ -1234,23 +1241,6 @@ power = [
 
 
    #+CALL: json(data=densityfit, title="densityfit")
-
-   #+RESULTS:
-   :results:
-   #+begin_src python :tangle trex.json
-       "densityfit": {
-		  "type" : [ "str"  , []            ]
-	 ,         "num" : [ "dim"  , []            ]
-	 , "coefficient" : [ "float", [ "densityfit.num" ] ]
-       } ,
-   #+end_src
-
-   #+RESULTS:
-
-   :end:
-
-   :end:
-
 
 * Multi-determinant information
 ** Slater determinants (determinant group)
