@@ -1214,7 +1214,7 @@ power = [
 
     :end:
 
-** Density fitting coefficients (dfc group)
+** Density fitting coefficients (densityfit group)
 
   The molecular electron density can be approximated by an expansion
   on an auxiliary basis such that:
@@ -1226,23 +1226,22 @@ power = [
   The $a_i$ are the $N$ density fitting coefficients. The auxiliary basis
   is defined within the ~auxbasis~ group.
 
-   #+NAME: dfc
+   #+NAME: densityfit
   | Variable      | Type    | Row-major Dimensions | Column-major Dimensions | Description                                   |
   |---------------+---------+----------------------+-------------------------+-----------------------------------------------|
-  | ~type~        | ~str~   |                      |                         | Free text to identify the set of coefficients |
   | ~num~         | ~dim~   |                      |                         | Number of coefficients                        |
-  | ~coefficient~ | ~float~ | ~[dfc.num]~          | ~(dfc.num)~             | Density fitting coefficients                  |
+  | ~coefficient~ | ~float~ | ~[densityfit.num]~   |  ~(densityfit.num)~     | Density fitting coefficients                  |
 
 
-   #+CALL: json(data=dfc, title="dfc")
+   #+CALL: json(data=densityfit, title="densityfit")
 
    #+RESULTS:
    :results:
    #+begin_src python :tangle trex.json
-       "dfc": {
+       "densityfit": {
 		  "type" : [ "str"  , []            ]
 	 ,         "num" : [ "dim"  , []            ]
-	 , "coefficient" : [ "float", [ "dfc.num" ] ]
+	 , "coefficient" : [ "float", [ "densityfit.num" ] ]
        } ,
    #+end_src
 
