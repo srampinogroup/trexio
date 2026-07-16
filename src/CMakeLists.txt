@@ -145,11 +145,29 @@ install(FILES
   )
 
 set(TREXIO_PC_REQUIRES_PRIVATE "")
+set(TREXIO_PC_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
+
 if(ENABLE_HDF5)
-  set(TREXIO_PC_REQUIRES_PRIVATE "hdf5")
+  find_package(PkgConfig QUIET)
+  if(PkgConfig_FOUND)
+    pkg_check_modules(_TREXIO_HDF5_PC QUIET hdf5)
+  endif()
+  if(_TREXIO_HDF5_PC_FOUND)
+    set(TREXIO_PC_REQUIRES_PRIVATE "hdf5")
+  else()
+    # No hdf5.pc on this system (e.g. Fedora, or Debian's hdf5-serial):
+    # embed the actual link flags instead of Requiring a missing module.
+    foreach(_lib_hdf5 IN LISTS HDF5_C_LIBRARIES)
+      string(APPEND TREXIO_PC_LIBS_PRIVATE " ${_lib_hdf5}")
+    endforeach()
+    if(TREXIO_HDF5_IS_PARALLEL)
+      foreach(_lib_mpi IN LISTS MPI_C_LIBRARIES)
+        string(APPEND TREXIO_PC_LIBS_PRIVATE " ${_lib_mpi}")
+      endforeach()
+    endif()
+  endif()
 endif()
 
-set(TREXIO_PC_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
 if(UNIX)
   string(APPEND TREXIO_PC_LIBS_PRIVATE " -lm")
 endif()
