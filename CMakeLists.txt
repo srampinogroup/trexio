@@ -8,6 +8,7 @@ cmake_minimum_required(VERSION 3.19)
 project(Trexio
 	VERSION 2.6.1
 	DESCRIPTION "TREX I/O library"
+	HOMEPAGE_URL "https://trex-coe.github.io/trexio/"
 	LANGUAGES C
 	)
 
