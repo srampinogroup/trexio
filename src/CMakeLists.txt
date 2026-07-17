@@ -17,6 +17,7 @@ set(TREXIO_PRIVATE_HEADERS
 	)
 
 add_library(trexio)
+add_library(trexio::trexio ALIAS trexio)
 
 # Set TREXIO version and include files.
 set_target_properties(trexio PROPERTIES
