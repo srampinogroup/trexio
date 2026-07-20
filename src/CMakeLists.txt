@@ -37,7 +37,7 @@ target_link_std_math(trexio PRIVATE)
 target_link_libraries(trexio PRIVATE Threads::Threads)
 
 # ============= CONFIGURE HDF5 ==============
-if(ENABLE_HDF5)
+if(TREXIO_USE_HDF5)
   list(APPEND TREXIO_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/trexio_hdf5.c)
   list(APPEND TREXIO_PRIVATE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/trexio_hdf5.h)
   target_compile_definitions(trexio PRIVATE HAVE_HDF5)
@@ -79,7 +79,7 @@ if(TREXIO_DEVEL)
   	templates_text/templator_text.org
     ${PROJECT_SOURCE_DIR}/trex.org
 	)
-  if(ENABLE_HDF5)
+  if(TREXIO_USE_HDF5)
     list(APPEND ORG_FILES templates_hdf5/templator_hdf5.org)
   endif()
 
@@ -148,7 +148,7 @@ install(FILES
 set(TREXIO_PC_REQUIRES_PRIVATE "")
 set(TREXIO_PC_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
 
-if(ENABLE_HDF5)
+if(TREXIO_USE_HDF5)
   find_package(PkgConfig QUIET)
   if(PkgConfig_FOUND)
     pkg_check_modules(_TREXIO_HDF5_PC QUIET hdf5)

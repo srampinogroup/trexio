@@ -177,10 +177,10 @@ simplicity.
 
 By default, the configuration step proceeds to search for the [HDF5 library](https://portal.hdfgroup.org/display/HDF5/HDF5).
 This search can be disabled if HDF5 is not present/installable on the user machine.
-To build TREXIO without HDF5 back end, append `--without-hdf5` option to `configure` script or `-DENABLE_HDF5=OFF` option to `cmake`. For example,
+To build TREXIO without HDF5 back end, append `--without-hdf5` option to `configure` script or `-DTREXIO_USE_HDF5=OFF` option to `cmake`. For example,
 
 - `./configure --without-hdf5`
-- `cmake -S. -Bbuild -DENABLE_HDF5=OFF`
+- `cmake -S. -Bbuild -DTREXIO_USE_HDF5=OFF`
 
 #### For TREXIO developers: from the GitHub repo clone
 

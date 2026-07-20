@@ -12,10 +12,11 @@ project(Trexio
 	LANGUAGES C
 	)
 
-option(TREXIO_FORTRAN "Build and test the TREXIO Fortran interface" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-option(ENABLE_HDF5 "Enable HDF5 support" ON)
-option(TREXIO_TESTS "Whether to perform tests for TREXIO" ON)
+option(BUILD_TESTING "Whether to perform tests for TREXIO" ON)
+
+option(TREXIO_FORTRAN "Build and test the TREXIO Fortran interface" ON)
+option(TREXIO_USE_HDF5 "Enable HDF5 support" ON)
 
 # Optional configure for developer mode to generate source code from org-mode files.
 option(TREXIO_DEVEL "TREXIO developer mode (for code generation)." OFF)
@@ -38,7 +39,7 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
 set(TREXIO_HDF5_IS_PARALLEL OFF)
-if(ENABLE_HDF5)
+if(TREXIO_USE_HDF5)
   find_package(HDF5 REQUIRED COMPONENTS C)
 
   message(STATUS "HDF5 version     :: ${HDF5_VERSION}")
@@ -99,7 +100,7 @@ endif()
 add_subdirectory(src)
 
 # Add subdirectory with unit tests.
-if(TREXIO_TESTS)
+if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()

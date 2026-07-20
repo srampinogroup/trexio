@@ -18,7 +18,7 @@ set(Tests_text
   pre_close
   )
 
-if(ENABLE_HDF5)
+if(TREXIO_USE_HDF5)
 # Create a list of tests for HDF5 back end.
   set(Tests_hdf5
     open_hdf5
