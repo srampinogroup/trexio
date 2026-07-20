@@ -272,10 +272,16 @@ find_package(trexio CONFIG REQUIRED)
 target_link_libraries(your_target PRIVATE trexio::trexio)
 ```
 
-The package also exposes `TREXIO_WITH_HDF5`, `TREXIO_HDF5_IS_PARALLEL`, and
-`TREXIO_WITH_FORTRAN` so downstream projects can inspect the installed TREXIO
-configuration when necessary. The library type is available from the standard
-`TYPE` property of the `trexio::trexio` target.
+This will make CMake detect and use `trexio-config.cmake`, which also exposes `TREXIO_WITH_HDF5`,
+`TREXIO_HDF5_IS_PARALLEL`, and `TREXIO_WITH_FORTRAN` so downstream projects can inspect the installed
+TREXIO configuration when necessary. You will need to make sure the path to TREXIO CMake config files
+and target files are included in environment variable `CMAKE_PREFIX_PATH` if it is not in the standard
+locations.
+
+**Hint:** Instead of leveraging `trexio-config.cmake`, downstream can also use their custom Find-module
+file for package discovery. For example, one can create a `FindTREXIO.cmake` in their CMake module path,
+and use `find_package(TREXIO REQUIRED)` (dropping `CONFIG` makes CMake use custom Find-module first if
+it exists). However, this way is usually not as robust as leveraging upstream config files.
 
 In Fortran applications, make sure that the `trexio_f.f90` module file is included in the source tree.
 You might have to manually copy it into your program source directory.
