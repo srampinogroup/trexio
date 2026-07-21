@@ -124,6 +124,9 @@ TEST_FILES = \
     tests/io_jastrow_hdf5.c \
     tests/io_jastrow_text.c \
     tests/io_memory.c \
+    tests/io_mo_temperature.c \
+    tests/io_mo_temperature_hdf5.c \
+    tests/io_mo_temperature_text.c \
     tests/io_num.c \
     tests/io_num_hdf5.c \
     tests/io_num_text.c \
@@ -153,6 +156,7 @@ EXTRA_DIST += $(TEST_FILES)
 
 TESTS_C = \
   tests/open_text \
+  tests/io_mo_temperature_text \
   tests/io_num_text \
   tests/io_dset_float_text \
   tests/io_dset_int_text \
@@ -172,6 +176,7 @@ TESTS_C = \
 if HAVE_HDF5
 TESTS_C += \
   tests/open_hdf5 \
+  tests/io_mo_temperature_hdf5 \
   tests/io_num_hdf5 \
   tests/io_dset_float_hdf5 \
   tests/io_dset_int_hdf5 \

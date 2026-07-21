@@ -259,7 +259,7 @@
   constants are explicitly provided in the TREXIO files to
   ensure portability and completeness.
 
-  We consider here basis functions centered on nuclei. Despite this 
+  We consider here basis functions centered on nuclei. Despite this
   restriction, one can introduce *dummy atoms* (artificial centers
   with no physical meaning) solely for the purpose of placing basis
   functions at arbitrary locations in space.
@@ -359,8 +359,8 @@
   \]
   must remain invariant under any redistribution of the normalization
   between the three factors.
-  
-  
+
+
 *** Numerical orbitals
 
     TREXIO supports numerical atom centered orbitals. The implementation is
@@ -1090,9 +1090,15 @@ power = [
   | ~class~          | ~str~   | ~[mo.num]~           | ~(mo.num)~              | Choose among: Core, Inactive, Active, Virtual, Deleted                   |
   | ~symmetry~       | ~str~   | ~[mo.num]~           | ~(mo.num)~              | Symmetry in the point group                                              |
   | ~occupation~     | ~float~ | ~[mo.num]~           | ~(mo.num)~              | Occupation number                                                        |
+  | ~electronic_temperature~ | ~float~ |             |                         | Electronic temperature in atomic units used to determine the occupations |
   | ~energy~         | ~float~ | ~[mo.num]~           | ~(mo.num)~              | For canonical MOs, corresponding eigenvalue                              |
   | ~spin~           | ~int~   | ~[mo.num]~           | ~(mo.num)~              | For UHF wave functions, 0 is $\alpha$ and 1 is $\beta$                   |
   | ~k_point~        | ~index~ | ~[mo.num]~           | ~(mo.num)~              | For periodic calculations, the $k$ point to which each MO belongs        |
+
+   When the occupations are generated from a finite-temperature
+   calculation, ~electronic_temperature~ stores the corresponding
+   electronic temperature in atomic units so that the wave function can
+   be restarted consistently.
 
    **Warning**: ~mo.num~ is the total number of MOs stored in the file.
    For periodic calculations, this group contains all the MOs
@@ -1113,6 +1119,7 @@ power = [
 	 ,          "class" : [ "str"  , [ "mo.num" ]           ]
 	 ,       "symmetry" : [ "str"  , [ "mo.num" ]           ]
 	 ,     "occupation" : [ "float", [ "mo.num" ]           ]
+	 , "electronic_temperature" : [ "float", []             ]
 	 ,         "energy" : [ "float", [ "mo.num" ]           ]
 	 ,           "spin" : [ "int"  , [ "mo.num" ]           ]
 	 ,        "k_point" : [ "index", [ "mo.num" ]           ]
@@ -1239,7 +1246,7 @@ power = [
    $n_\uparrow$ and $n_\downarrow$ correspond to ~electron.up_num~ and ~electron.dn_num~, respectively.
 
    The ordering of determinants in TREXIO files is $\alpha \alpha \ldots \alpha_{n_\uparrow} \beta \beta \ldots \beta_{n_\downarrow}$.
-   The functions ~trexio_phase_aabb_to_abab~ and ~trexio_phase_aabb_to_abab_list~ help switching to the 
+   The functions ~trexio_phase_aabb_to_abab~ and ~trexio_phase_aabb_to_abab_list~ help switching to the
    $\alpha \beta \alpha \beta \ldots$ ordering by checking if a change of phase is required. These functions return ~TREXIO_SUCCESS~ if
    a change of phase is not required, or ~TREXIO_PHASE_CHANGE~ otherwise.
 

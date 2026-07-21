@@ -11,6 +11,7 @@ set(Tests_text
   io_safe_dset_float_text
   io_dset_int_text
   io_num_text
+  io_mo_temperature_text
   io_str_text
   io_state_energy_text
   delete_group_text
@@ -29,6 +30,7 @@ if(ENABLE_HDF5)
     io_safe_dset_float_hdf5
     io_dset_int_hdf5
     io_num_hdf5
+    io_mo_temperature_hdf5
     io_str_hdf5
     io_state_energy_hdf5
     delete_group_hdf5
