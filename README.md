@@ -35,6 +35,7 @@ single- and/or multi-reference wave functions:
 | [QMCkl](https://github.com/TREX-CoE/qmckl)                                     | Read             | ---             |
 | [Dirac](https://www.diracprogram.org)                                          | Write            | ---             |
 | [pymolpro](https://molpro.github.io/pymolpro)                                  | Write            | ---             |
+| [tblite](https://github.com/tblite/tblite)                                     | Write            | ---             |
 
 
 * [Installation](#installation)
