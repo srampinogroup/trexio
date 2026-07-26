@@ -33,7 +33,7 @@ set_target_properties(trexio PROPERTIES
 target_compile_features(trexio PUBLIC c_std_99)
 
 include(standard_math_lib)
-target_link_std_math(trexio PRIVATE)
+target_link_std_math(trexio PRIVATE TREXIO_STD_MATH_LIB)
 target_link_libraries(trexio PRIVATE Threads::Threads)
 
 # ============= CONFIGURE HDF5 ==============
@@ -58,14 +58,22 @@ target_include_directories(trexio PUBLIC
 # ============= FORTRAN SUPPORT ==============
 
 if(TREXIO_FORTRAN)
-  add_library(trexio_f)
-  target_sources(trexio_f PUBLIC ${TREXIO_MOD_FILE})
-  target_link_libraries(trexio_f PUBLIC trexio)
+  set(_trexio_fortran_module_dir "${CMAKE_CURRENT_BINARY_DIR}/modules")
+
+  add_library(trexio_f ${TREXIO_MOD_FILE})
+  target_link_libraries(trexio_f PUBLIC trexio::trexio)
+  target_include_directories(trexio_f INTERFACE
+    $<BUILD_INTERFACE:${_trexio_fortran_module_dir}>
+  )
+  set_target_properties(trexio_f PROPERTIES
+    Fortran_MODULE_DIRECTORY "${_trexio_fortran_module_dir}"
+  )
 endif()
 
 # ====== CODE GENERATION FOR DEVEL MODE =====
 
-add_custom_command(
+if(TREXIO_DEVEL)
+  add_custom_command(
         # note writing trex.json to src tree
         COMMAND bash build_json.sh
         OUTPUT  "${PROJECT_SOURCE_DIR}/trex.json"
@@ -73,21 +81,20 @@ add_custom_command(
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tools
         COMMENT "Generate trex.json from trex.org")
 
-if(TREXIO_DEVEL)
   set(ORG_FILES
-	templates_front/templator_front.org
-  	templates_text/templator_text.org
-    ${PROJECT_SOURCE_DIR}/trex.org
-	)
+      templates_front/templator_front.org
+      templates_text/templator_text.org
+      ${PROJECT_SOURCE_DIR}/trex.org
+  )
   if(TREXIO_USE_HDF5)
     list(APPEND ORG_FILES templates_hdf5/templator_hdf5.org)
   endif()
 
   add_custom_command(OUTPUT
-	  ${TREXIO_SOURCES}
-	  ${TREXIO_PUBLIC_HEADERS}
-	  ${TREXIO_PRIVATE_HEADERS}
-	  ${TREXIO_MOD_FILE}
+        ${TREXIO_SOURCES}
+        ${TREXIO_PUBLIC_HEADERS}
+        ${TREXIO_PRIVATE_HEADERS}
+        ${TREXIO_MOD_FILE}
       COMMAND ./build_trexio.sh
       DEPENDS ${ORG_FILES} ${PROJECT_SOURCE_DIR}/include/config.h
               "${PROJECT_SOURCE_DIR}/trex.json"
@@ -111,7 +118,7 @@ install(TARGETS trexio
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  )
+)
 
 if(TREXIO_FORTRAN)
   install(FILES ${TREXIO_MOD_FILE} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
@@ -125,25 +132,25 @@ configure_package_config_file(
   "${PROJECT_SOURCE_DIR}/cmake/trexio-config.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/trexio-config.cmake"
   INSTALL_DESTINATION "${_trexio_install_cmakedir}"
-  )
+)
 
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/trexio-config-version.cmake"
   VERSION "${PROJECT_VERSION}"
   COMPATIBILITY SameMajorVersion
-  )
+)
 
 install(EXPORT trexio-targets
   FILE trexio-targets.cmake
   NAMESPACE trexio::
   DESTINATION "${_trexio_install_cmakedir}"
-  )
+)
 
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/trexio-config.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/trexio-config-version.cmake"
   DESTINATION "${_trexio_install_cmakedir}"
-  )
+)
 
 set(TREXIO_PC_REQUIRES_PRIVATE "")
 set(TREXIO_PC_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
@@ -169,20 +176,34 @@ if(TREXIO_USE_HDF5)
   endif()
 endif()
 
-if(UNIX)
-  string(APPEND TREXIO_PC_LIBS_PRIVATE " -lm")
+if(TREXIO_STD_MATH_LIB)
+  string(APPEND TREXIO_PC_LIBS_PRIVATE " -l${TREXIO_STD_MATH_LIB}")
 endif()
 string(STRIP "${TREXIO_PC_LIBS_PRIVATE}" TREXIO_PC_LIBS_PRIVATE)
+
+# Keep relative GNUInstallDirs relocatable, while also supporting package
+# managers that pass absolute installation directories.
+if(IS_ABSOLUTE "${CMAKE_INSTALL_LIBDIR}")
+  set(TREXIO_PC_LIBDIR "${CMAKE_INSTALL_LIBDIR}")
+else()
+  set(TREXIO_PC_LIBDIR "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
+endif()
+if(IS_ABSOLUTE "${CMAKE_INSTALL_INCLUDEDIR}")
+  set(TREXIO_PC_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}")
+else()
+  set(TREXIO_PC_INCLUDEDIR "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+endif()
 
 configure_file(
   "${PROJECT_SOURCE_DIR}/cmake/trexio.pc.in"
   "${CMAKE_CURRENT_BINARY_DIR}/trexio.pc"
   @ONLY
-  )
+)
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/trexio.pc"
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/trexio.pc"
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
-  )
+)
 
 # Uninstall target, copied from CMake FAQ:
 # https://gitlab.kitware.com/cmake/community/wikis/FAQ#can-i-do-make-uninstall-with-cmake
@@ -190,8 +211,7 @@ if(NOT TARGET uninstall)
   configure_file(
     "${PROJECT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
-
+    @ONLY)
   add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 endif()
