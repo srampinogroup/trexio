@@ -1,7 +1,7 @@
 # This function checks if the C standard library includes the symbols for
 # math operations and if not, will try to locate the auxiliary library (libm on Unix)
 # and link the given target to it.
-function(target_link_std_math TARGET VISIBILITY)
+function(target_link_std_math TARGET VISIBILITY OUTPUT_VARIABLE)
   include(CheckCSourceCompiles)
 
   # Clear variable to not be affected by external code
@@ -23,22 +23,20 @@ return (int) (log( (double) *argv[0]) + sin( (double) *argv[1]) + sqrt( (double)
   )
 
   set(VAR_BASENAME "${PROJECT_NAME}_COMPILES_C")
-
   check_c_source_compiles("${TEST_SOURCE}" "${VAR_BASENAME}")
-
-  if ("${VAR_BASENAME}")
+  if(${VAR_BASENAME})
     # No explicit linking to math library required
+    set(${OUTPUT_VARIABLE} "" PARENT_SCOPE)
     return()
   endif()
 
   set(STD_MATH_LIB "m")
-
   set(CMAKE_REQUIRED_LIBRARIES "${STD_MATH_LIB}")
   check_c_source_compiles("${TEST_SOURCE}" "${VAR_BASENAME}_WITH_STDMATH")
-
-  if (NOT "${${VAR_BASENAME}_WITH_STDMATH}")
+  if(NOT ${VAR_BASENAME}_WITH_STDMATH)
     message(FATAL_ERROR "Program doesn't compile even though linked against '${STD_MATH_LIB}'")
   endif()
-  
+
   target_link_libraries("${TARGET}" "${VISIBILITY}" "${STD_MATH_LIB}")
+  set(${OUTPUT_VARIABLE} "${STD_MATH_LIB}" PARENT_SCOPE)
 endfunction()
