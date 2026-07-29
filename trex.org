@@ -593,6 +593,7 @@ This is a duplicate of the basis group that can be used to store
 information about auxiliary basis functions. See basis group
 documentation.
 
+*** Data definitions
 
     # Use data=basis and title=auxbasis below to ensure that the data
     # is the same in the two tables
@@ -636,41 +637,6 @@ documentation.
     #+RESULTS:
 
     :end:
-    :results:
-    #+begin_src python :tangle trex.json
-	"auxbasis": {
-			 "type" : [ "str"  , []                                                 ]
-	  ,          "prim_num" : [ "dim"  , []                                                 ]
-	  ,         "shell_num" : [ "dim"  , []                                                 ]
-	  ,      "nao_grid_num" : [ "dim"  , []                                                 ]
-	  ,  "interp_coeff_cnt" : [ "dim"  , []                                                 ]
-	  ,     "nucleus_index" : [ "index", [ "auxbasis.shell_num" ]                           ]
-	  ,     "shell_ang_mom" : [ "int"  , [ "auxbasis.shell_num" ]                           ]
-	  ,      "shell_factor" : [ "float", [ "auxbasis.shell_num" ]                           ]
-	  ,           "r_power" : [ "int"  , [ "auxbasis.shell_num" ]                           ]
-	  ,    "nao_grid_start" : [ "index", [ "auxbasis.shell_num" ]                           ]
-	  ,     "nao_grid_size" : [ "dim"  , [ "auxbasis.shell_num" ]                           ]
-	  ,       "shell_index" : [ "index", [ "auxbasis.prim_num" ]                            ]
-	  ,          "exponent" : [ "float", [ "auxbasis.prim_num" ]                            ]
-	  ,       "exponent_im" : [ "float", [ "auxbasis.prim_num" ]                            ]
-	  ,       "coefficient" : [ "float", [ "auxbasis.prim_num" ]                            ]
-	  ,    "coefficient_im" : [ "float", [ "auxbasis.prim_num" ]                            ]
-	  ,   "oscillation_arg" : [ "float", [ "auxbasis.prim_num" ]                            ]
-	  ,  "oscillation_kind" : [ "str"  , []                                                 ]
-	  ,       "prim_factor" : [ "float", [ "auxbasis.prim_num" ]                            ]
-	  ,             "e_cut" : [ "float", []                                                 ]
-	  ,   "nao_grid_radius" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
-	  ,      "nao_grid_phi" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
-	  ,     "nao_grid_grad" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
-	  ,      "nao_grid_lap" : [ "float", [ "auxbasis.nao_grid_num" ]                        ]
-	  , "interpolator_kind" : [ "str"  , []                                                 ]
-	  ,  "interpolator_phi" : [ "float", [ "auxbasis.nao_grid_num", "auxbasis.interp_coeff_cnt" ] ]
-	  , "interpolator_grad" : [ "float", [ "auxbasis.nao_grid_num", "auxbasis.interp_coeff_cnt" ] ]
-	  ,  "interpolator_lap" : [ "float", [ "auxbasis.nao_grid_num", "auxbasis.interp_coeff_cnt" ] ]
-	} ,
-    #+end_src
-
-    #+RESULTS:
 
 
 ** Effective core potentials (ecp group)
