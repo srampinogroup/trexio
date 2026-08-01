@@ -165,15 +165,13 @@ jobs:
       - name: Print the PYTREXIO_VERSION
         run: echo ${{ env.PYTREXIO_VERSION }}
   
-      # Conventional download-artifact action does not work for artifact produced in a different workflow,
-      # which is the case here (TREXIO CI produced the Python API distribution tarball)
       - name: Download the Python API distribution tarball
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
-          # Specify the name of the workflow file which uploaded the tarball
-          workflow: actions.yml
-          workflow_conclusion: success
           name: pytrexio-source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: python
   
       # at the moment we have to pull the custom container with pre-installed HDF5
@@ -227,15 +225,13 @@ jobs:
       - name: Print the PYTREXIO_VERSION
         run: echo ${{ env.PYTREXIO_VERSION }}
   
-      # Conventional download-artifact action does not work for artifact produced in a different workflow,
-      # which is the case here (TREXIO CI produced the Python API distribution tarball)
       - name: Download the Python API distribution tarball
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
-          # Specify the name of the workflow file which uploaded the tarball
-          workflow: actions.yml
-          workflow_conclusion: success
           name: pytrexio-source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: python
   
       # at the moment we have to pull the custom container with pre-installed HDF5
@@ -287,11 +283,12 @@ jobs:
           path: dist
   
       - name: Download the Python API distribution tarball
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
-          workflow: actions.yml
-          workflow_conclusion: success
           name: pytrexio-source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: dist
   
       # The artifacts have to be in dist/ directory so that
