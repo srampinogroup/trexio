@@ -25,7 +25,7 @@ jobs:
       message: ${{ steps.commit_message.outputs.message }}
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
         # Gets the correct commit message for pull request
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -63,9 +63,9 @@ jobs:
             python: ["cp39", "cp310", "cp314"]
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
@@ -76,7 +76,7 @@ jobs:
           brew install libtool
           pip install swig==4.3
 
-      - uses: actions/cache@v6
+      - uses: actions/cache@v4
         id: cache-hdf5
         with:
           path: $HDF5_INSTALLDIR
@@ -130,7 +130,7 @@ jobs:
         #CIBW_TEST_COMMAND: "python3 -m pytest -v test/test_api.py"
 
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4 # v4.3.6
         with:
           name: pytrexio-${{ matrix.python }}-${{ matrix.buildplat[1] }}-wheels
           path: ./wheelhouse/*.whl
@@ -149,10 +149,10 @@ jobs:
   
     steps:
       - name: Checkout the branch
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
   
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
   
@@ -165,13 +165,15 @@ jobs:
       - name: Print the PYTREXIO_VERSION
         run: echo ${{ env.PYTREXIO_VERSION }}
   
+      # Conventional download-artifact action does not work for artifact produced in a different workflow,
+      # which is the case here (TREXIO CI produced the Python API distribution tarball)
       - name: Download the Python API distribution tarball
-        uses: actions/download-artifact@v8
+        uses: dawidd6/action-download-artifact@v2
         with:
+          # Specify the name of the workflow file which uploaded the tarball
+          workflow: actions.yml
+          workflow_conclusion: success
           name: pytrexio-source
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
           path: python
   
       # at the moment we have to pull the custom container with pre-installed HDF5
@@ -190,7 +192,7 @@ jobs:
         working-directory: python
   
       - name: Upload produced wheels as artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4 # v4.3.6
         with:
           name: pytrexio-manylinux-${{ matrix.manylinux_tag }}-wheels
           path: ./python/wheelhouse/*.whl
@@ -209,10 +211,10 @@ jobs:
   
     steps:
       - name: Checkout the branch
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
   
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
   
@@ -225,13 +227,15 @@ jobs:
       - name: Print the PYTREXIO_VERSION
         run: echo ${{ env.PYTREXIO_VERSION }}
   
+      # Conventional download-artifact action does not work for artifact produced in a different workflow,
+      # which is the case here (TREXIO CI produced the Python API distribution tarball)
       - name: Download the Python API distribution tarball
-        uses: actions/download-artifact@v8
+        uses: dawidd6/action-download-artifact@v2
         with:
+          # Specify the name of the workflow file which uploaded the tarball
+          workflow: actions.yml
+          workflow_conclusion: success
           name: pytrexio-source
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
           path: python
   
       # at the moment we have to pull the custom container with pre-installed HDF5
@@ -250,7 +254,7 @@ jobs:
         working-directory: python
   
       - name: Upload produced wheels as artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4 # v4.3.6
         with:
           name: pytrexio-manylinux-${{ matrix.manylinux_tag }}-wheels
           path: ./python/wheelhouse/*.whl
@@ -267,10 +271,10 @@ jobs:
   
     steps:
       - name: Checkout the branch
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
   
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
   
@@ -278,17 +282,16 @@ jobs:
         run: python -m pip install -U setuptools twine
   
       - name: Download the build artifacts (wheels) of this workflow
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           path: dist
   
       - name: Download the Python API distribution tarball
-        uses: actions/download-artifact@v8
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: actions.yml
+          workflow_conclusion: success
           name: pytrexio-source
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
           path: dist
   
       # The artifacts have to be in dist/ directory so that
